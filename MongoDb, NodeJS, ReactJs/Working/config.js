@@ -1,13 +1,14 @@
-const env = process.env;
+const { env } = process;
 
-export const nodeEnv = env.NODE_ENV || 'development';
+export const nodeEnv = env.nodeEnv || 'development'
 
-export const logStars = function(message) {
-  console.info('**********');
+export const logStars = (message) => {
+  console.info('*********');
   console.info(message);
-  console.info('**********');
+  console.info("*********");
 };
-
+  
 export default {
   port: env.PORT || 8080
 };
+
