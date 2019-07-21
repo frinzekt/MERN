@@ -1,57 +1,35 @@
+import config from "./config";
+//import fs from "fs"; //used for returning web file from file server to requested routing path
+import express from "express";
+import apiRouter from "./api"; //apiRouter for routing API from index.js (see example here)
+const server = express(); //CREATE SERVER
+
 /*
-
-import config, { nodeEnv, logStars } from "./config"
-
-console.log(config, nodeEnv);
-logStars("Nice One")
-
+Express can listen to more than one single request event
+It can also handle server-side routing that can expose API
+to listen to certain routes eg. server.get
 */
 
-//DEMONSTRATION FOR MODULES AS CLIENTS
-/*
-//imports and method depends on whether using http or https
-import https from 'https';
-
-https.get('https://www.lynda.com', res => { //res -> response
-    //Status Code on the stream
-    console.log('Response status code: ', res.statusCode);
-    
-    //Data Event listening on the stream
-    //Every event gives a chunk buffer
-    res.on("data", chunk => {
-      console.log(chunk.toString());
-    });
-});*/
-
-// DEMONSTRATION FOR MODULE AS SERVER
-import http from 'http';
-
-const server = http.createServer();
-
-server.listen(8081); //Running server on specific port
-
-//Create server creates an event emitter object eg. Request event
-//2 object: request and response
-console.log("Start");
-//Response Maker -> Satisfying Request
-server.on('request', (req, res) => {
-    res.write("HELLO HTTP!\n");
-    setTimeout(() => {
-        res.write('I can stream!\n');
-        res.end();
-    }, 3000); //Timer after 3 seconds
+server.get("/", (req, res) => {
+	//Two parameters: path server for "Req and Res", and request and response routes
+	res.send("Hello Express");
 });
 
-//To make request "curl http://localhost:8081"
-
-/*Note by default, the http createServer() can handle the Response and Request Events
-Hence it can be designed to look like this instead. Erasing the "server.on" function*/
+server.use("/api", apiRouter);
+//Express has a static middleware which serves static files easily
+server.use(express.static("public"));
 
 /*
-const server = http.createServer((req, res) => {
-  res.write("HELLO HTTP!\n");
-  setTimeout(() => {
-    res.write("I can stream!\n");
-    res.end();
-  }, 3000); //Timer after 3 seconds
+server.get("/about.html", (req, res) => {
+	//res.send("This is about page");
+	fs.readFile("./about.html", (err, data) => {
+		//Reads the data of the file and turns it into a string for sending
+		res.send(data.toString());
+	});
 });*/
+
+server.listen(config.port, () => {
+	//Success Handler on CallBack Function
+	console.info("Express Listening on port ", config.port);
+});
+//PORT and Success Handler
