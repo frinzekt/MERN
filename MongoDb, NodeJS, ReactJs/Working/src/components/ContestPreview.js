@@ -3,9 +3,8 @@ import React from "react";
 const ContestPreview = ({ contest }) => {
 	return (
 		<div className="ContestPreview">
-			<p>{contest.id}</p>
-			<p>{contest.categoryName}</p>
-			<p>{contest.contestName}</p>
+			<div className="category-name">{contest.categoryName}</div>
+			<div className="contest-name">{contest.contestName}</div>
 		</div>
 	);
 };

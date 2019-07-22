@@ -1,7 +1,12 @@
 import config from "./config";
+import path from "path"; //when using any kind of path, path has to be imported
 //import fs from "fs"; //used for returning web file from file server to requested routing path
+import sassMiddleware from "node-sass-middleware";
+//incorporating Sass/CSS to be used in the server
+
 import express from "express";
 import apiRouter from "./api"; //apiRouter for routing API from index.js (see example here)
+import { pathToFileURL } from "url";
 const server = express(); //CREATE SERVER
 
 /*
@@ -9,6 +14,14 @@ Express can listen to more than one single request event
 It can also handle server-side routing that can expose API
 to listen to certain routes eg. server.get
 */
+
+//This is an object used to integrate sass to the server which takes an object
+server.use(
+	sassMiddleware({
+		src: path.join(__dirname, "scss"),
+		dest: path.join(__dirname, "public")
+	})
+);
 
 server.set("view engine", "ejs");
 
