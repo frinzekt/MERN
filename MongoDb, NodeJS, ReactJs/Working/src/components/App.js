@@ -9,15 +9,12 @@ class App extends React.Component {
 		test: 42
 	};
 
-    componentDidMount() {
-        
+	componentDidMount() {
 		console.log("did Mount");
-		debugger;
 	}
 
 	componentWillUnmount() {
 		console.log("will unmount");
-		debugger;
 	}
 
 	render() {
