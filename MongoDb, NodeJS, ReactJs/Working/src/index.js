@@ -4,21 +4,30 @@ import ReactDom from "react-dom";
 
 const color = Math.random() > 0.5 ? "green" : "red";
 
-const App = props => {
+const Header = ({ message }) => {
 	return (
-		<h2 className="text-center" style={{ color }}>
-			{props.headerMessage}
+		<h2 className="text-center Header" style={{ color }}>
+			{message}
 		</h2>
 	);
 };
 
-App.propTypes = {
+Header.propTypes = {
 	//string refers to limitation of type via string, isRequired refers to limitation of non-null value
-	headerMessage: PropTypes.string.isRequired
+	message: PropTypes.string.isRequired
 };
 
-App.defaultProps = {
-	headerMessage: "Hello"
+Header.defaultProps = {
+	message: "Hello"
+};
+
+const App = props => {
+	return (
+		<div className="App">
+			<Header message="Naming Contest For Header" />
+			<div>...</div>
+		</div>
+	);
 };
 
 ReactDom.render(<App />, document.getElementById("root"));
