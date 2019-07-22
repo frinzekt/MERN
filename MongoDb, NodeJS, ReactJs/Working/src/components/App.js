@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Header from "./header";
+import ContestPreview from "./ContestPreview";
 
 class App extends React.Component {
 	state = {
@@ -18,10 +19,14 @@ class App extends React.Component {
 	}
 
 	render() {
+		const { contests } = this.props;
+
 		return (
 			<div className="App">
 				<Header message={this.state.pageHeader} />
-				<div>{this.state.test}</div>
+				{contests.map(contest => (
+					<ContestPreview key={contest.id} contest={contest} />
+				))}
 			</div>
 		);
 	}
