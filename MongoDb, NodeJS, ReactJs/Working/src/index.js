@@ -8,6 +8,6 @@ ReactDom.render(
 	//<App contests={[]}
 
 	//Or a dynamic changing can be done in the state of the component
-	<App />,
+	<App initialContests={[]} />,
 	document.getElementById("root")
 );

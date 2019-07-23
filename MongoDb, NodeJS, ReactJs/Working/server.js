@@ -25,14 +25,16 @@ server.use(
 
 server.set("view engine", "ejs");
 
-import "./serverRender";
+import serverRender from "./serverRender";
 
 server.get("/", (req, res) => {
-	//To render EJS component omitting the extension as default
-	//Render has two arguments, path and variable passing
-	res.render("index", {
-		content: "Hello This is Variable passing of <em>var content</em>"
-	});
+	serverRender()
+		.then(content => {
+			res.render("index", {
+				content
+			});
+		})
+		.catch(console.error);
 });
 
 server.use("/api", apiRouter);

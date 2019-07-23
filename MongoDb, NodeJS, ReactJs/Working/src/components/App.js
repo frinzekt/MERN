@@ -8,7 +8,7 @@ import ContestPreview from "./ContestPreview";
 class App extends React.Component {
 	state = {
 		pageHeader: "Naming Contest via State Variable",
-		contests: []
+		contests: this.props.initialContests
 	};
 
 	componentDidMount() {
