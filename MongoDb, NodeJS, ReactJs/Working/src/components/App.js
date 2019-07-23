@@ -1,10 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 import Header from "./header";
 import ContestPreview from "./ContestPreview";
-
-import data from "../testData"; //API call simulation(getting data after rendering)
 
 class App extends React.Component {
 	state = {
@@ -13,10 +12,21 @@ class App extends React.Component {
 	};
 
 	componentDidMount() {
-		console.log(data);
-		this.setState(prevState => ({
-			contests: data.contests
-		}));
+		//Fetch Request
+		/* This method has been learned in React-Essential Training
+		fetch("http://localhost:8080/api/contests")
+			.then(data => data.json())
+			.then(data => this.setState({ contests: data.contests }));
+		*/
+		//Axios Request/ Ajax Request uses axios library
+		axios
+			.get("/api/contests")
+			.then(resp => {
+				this.setState({
+					contests: resp.data.contests
+				});
+			})
+			.catch(console.error);
 	}
 
 	componentWillUnmount() {
@@ -24,7 +34,6 @@ class App extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.contests);
 		return (
 			<div className="App">
 				<Header message={this.state.pageHeader} />
