@@ -25,6 +25,8 @@ server.use(
 
 server.set("view engine", "ejs");
 
+import "./serverRender";
+
 server.get("/", (req, res) => {
 	//To render EJS component omitting the extension as default
 	//Render has two arguments, path and variable passing
@@ -37,7 +39,7 @@ server.use("/api", apiRouter);
 //Express has a static middleware which serves static files easily
 server.use(express.static("public"));
 
-server.listen(config.port, () => {
+server.listen(config.port, config.host, () => {
 	//Success Handler on CallBack Function
 	console.info("Express Listening on port ", config.port);
 });

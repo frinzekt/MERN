@@ -9,5 +9,9 @@ export const logStars = message => {
 };
 
 export default {
-	port: env.PORT || 8080
+	port: env.PORT || 8080,
+	host: env.HOST || "0.0.0.0", //we need to host the site from the environment that can be accessed in ALL IP in machine
+	get serverUrl() {
+		return `http://${this.host}:${this.port}`;
+	}
 };
