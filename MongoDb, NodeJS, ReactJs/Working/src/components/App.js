@@ -4,14 +4,19 @@ import PropTypes from "prop-types";
 import Header from "./header";
 import ContestPreview from "./ContestPreview";
 
+import data from "../testData"; //API call simulation(getting data after rendering)
+
 class App extends React.Component {
 	state = {
 		pageHeader: "Naming Contest via State Variable",
-		test: 42
+		contests: []
 	};
 
 	componentDidMount() {
-		console.log("did Mount");
+		console.log(data);
+		this.setState(prevState => ({
+			contests: data.contests
+		}));
 	}
 
 	componentWillUnmount() {
@@ -19,12 +24,11 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { contests } = this.props;
-
+		console.log(this.state.contests);
 		return (
 			<div className="App">
 				<Header message={this.state.pageHeader} />
-				{contests.map(contest => (
+				{this.state.contests.map(contest => (
 					<ContestPreview key={contest.id} contest={contest} />
 				))}
 			</div>

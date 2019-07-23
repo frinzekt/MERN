@@ -6,7 +6,7 @@ import sassMiddleware from "node-sass-middleware";
 
 import express from "express";
 import apiRouter from "./api"; //apiRouter for routing API from index.js (see example here)
-import { pathToFileURL } from "url";
+
 const server = express(); //CREATE SERVER
 
 /*
