@@ -1,7 +1,8 @@
 import React from "react";
 
 import Header from "./header";
-import ContestPreview from "./ContestPreview";
+
+import ContentList from "./ContentList";
 
 class App extends React.Component {
 	state = {
@@ -19,9 +20,7 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<Header message={this.state.pageHeader} />
-				{this.state.contests.map(contest => (
-					<ContestPreview key={contest.id} contest={contest} />
-				))}
+				<ContentList contests={this.state.contests} />
 			</div>
 		);
 	}
