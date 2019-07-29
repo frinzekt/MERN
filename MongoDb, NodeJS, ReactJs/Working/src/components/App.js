@@ -4,6 +4,7 @@ import Header from "./header";
 import ContestList from "./ContentList";
 import ContestPreview from "./ContestPreview";
 import Contest from "./Contest";
+import * as api from "../api";
 
 //Alias to Window.history.pushstate
 //for support of older browser
@@ -28,9 +29,16 @@ class App extends React.Component {
 		pushState({ currentContestId: contestId }, `/contest/${contestId}`);
 		// lookup the contest
 		// this.state.contests[contestId]
-		this.setState({
-			pageHeader: this.state.contests[contestId].contestName,
-			currentContestId: contestId
+
+		api.fetchContest(contestId).then(contest => {
+			this.setState({
+				pageHeader: contest.contestName,
+				currentContestId: contest.id,
+				contests: {
+					...this.state.contests,
+					[contest.id]: contest
+				}
+			});
 		});
 	};
 
