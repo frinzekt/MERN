@@ -22,6 +22,6 @@ axios
 ReactDom.render(
 	//The concept of the change is that for the checksum problem not to occur
 	//The data has to be in the rendering side to begin with
-	<App initialContests={window.initialData.contests} />,
+	<App initialData={window.initialData} />,
 	document.getElementById("root")
 );

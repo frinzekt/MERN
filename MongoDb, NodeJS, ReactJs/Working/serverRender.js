@@ -12,7 +12,7 @@ const serverRender = () =>
 		//This used to be returning only the initialMarkup -> Content
 		return {
 			initialMarkup: ReactDOMServer.renderToString(
-				<App initialContests={resp.data.contests} />
+				<App initialData={resp.data} />
 			),
 			initialData: resp.data
 		};
