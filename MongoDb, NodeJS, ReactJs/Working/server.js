@@ -27,8 +27,12 @@ server.set("view engine", "ejs");
 
 import serverRender from "./serverRender";
 
-server.get("/", (req, res) => {
-	serverRender()
+//HANDLES THE PATH HAPPENING IN ROOT
+server.get(["/","/contest/:contestId"], (req, res) => {
+	//req.params.contestId -> displays the contestId which can be used for logical
+	//Note: the route could also be used for the logical statement
+	let contestId = req.params.contestId;
+	serverRender(contestId)
 		.then(({ initialMarkup, initialData }) => {
 			res.render("index", {
 				initialMarkup,
