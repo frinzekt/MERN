@@ -13,11 +13,10 @@ const pushState = (obj, url) => {
 	window.history.pushState(obj, "", url);
 };
 
-
 class App extends React.Component {
-static PropTypes = {
-	initialData: React.PropTypes.object.isRequired
-}
+	static PropTypes = {
+		initialData: PropTypes.object.isRequired
+	};
 
 	state = this.props.initialData;
 
@@ -43,16 +42,29 @@ static PropTypes = {
 		});
 	};
 
+	fetchContestsList = () => {
+		pushState({ currentContestId: null }, `/`);
+		// lookup the contest
+		// this.state.contests[contestId]
+
+		api.fetchContestsList().then(contests => {
+			this.setState({
+				currentContestId: null,
+				contests
+			});
+		});
+	};
+
 	//Gets the Current Contest To be projected
 	currentContest() {
-		return this.state.contests[this.state.currentContestId]
+		return this.state.contests[this.state.currentContestId];
 	}
 
-	pageHeader(){
-		if(this.state.currentContestId){
-			return this.currentContest().contestName
+	pageHeader() {
+		if (this.state.currentContestId) {
+			return this.currentContest().contestName;
 		}
-		return 'Naming Contests';
+		return "Naming Contests";
 	}
 
 	currentContent() {
@@ -65,7 +77,7 @@ static PropTypes = {
 
 
 			*/
-			return <Contest {...this.currentContest()} />;
+			return <Contest  {...this.currentContest()} />;
 		} else {
 			return (
 				<ContestList
