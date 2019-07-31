@@ -1,101 +1,87 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import Header from './Header';
+import ContestList from './ContestList';
+import Contest from './Contest';
+import * as api from '../api';
 
-import Header from "./header";
-import ContestList from "./ContentList";
-import ContestPreview from "./ContestPreview";
-import Contest from "./Contest";
-import * as api from "../api";
+const pushState = (obj, url) =>
+  window.history.pushState(obj, '', url);
 
-//Alias to Window.history.pushstate
-//for support of older browser
-const pushState = (obj, url) => {
-	window.history.pushState(obj, "", url);
+const onPopState = handler => {
+  window.onpopstate = handler;
 };
 
 class App extends React.Component {
-	static PropTypes = {
-		initialData: PropTypes.object.isRequired
-	};
+  static propTypes = {
+    initialData: React.PropTypes.object.isRequired
+  };
+  state = this.props.initialData;
+  componentDidMount() {
+    onPopState((event) => {
+      this.setState({
+        currentContestId: (event.state || {}).currentContestId
+      });
+    });
+  }
+  componentWillUnmount() {
+    onPopState(null);
+  }
+  fetchContest = (contestId) => {
+    pushState(
+      { currentContestId: contestId },
+      `/contest/${contestId}`
+    );
+    api.fetchContest(contestId).then(contest => {
+      this.setState({
+        currentContestId: contest.id,
+        contests: {
+          ...this.state.contests,
+          [contest.id]: contest
+        }
+      });
+    });
+  };
+  fetchContestList = () => {
+    pushState(
+      { currentContestId: null },
+      '/'
+    );
+    api.fetchContestList().then(contests => {
+      this.setState({
+        currentContestId: null,
+        contests
+      });
+    });
+  };
+  currentContest() {
+    return this.state.contests[this.state.currentContestId];
+  }
+  pageHeader() {
+    if (this.state.currentContestId) {
+      return this.currentContest().contestName;
+    }
 
-	state = this.props.initialData;
+    return 'Naming Contests';
+  }
+  currentContent() {
+    if (this.state.currentContestId) {
+      return <Contest
+               contestListClick={this.fetchContestList}
+               {...this.currentContest()} />;
+    }
 
-	componentDidMount() {}
-
-	componentWillUnmount() {
-		console.log("will unmount");
-	}
-
-	fetchContests = contestId => {
-		pushState({ currentContestId: contestId }, `/contest/${contestId}`);
-		// lookup the contest
-		// this.state.contests[contestId]
-
-		api.fetchContest(contestId).then(contest => {
-			this.setState({
-				currentContestId: contest.id,
-				contests: {
-					...this.state.contests,
-					[contest.id]: contest
-				}
-			});
-		});
-	};
-
-	fetchContestsList = () => {
-		pushState({ currentContestId: null }, `/`);
-		// lookup the contest
-		// this.state.contests[contestId]
-
-		api.fetchContestsList().then(contests => {
-			this.setState({
-				currentContestId: null,
-				contests
-			});
-		});
-	};
-
-	//Gets the Current Contest To be projected
-	currentContest() {
-		return this.state.contests[this.state.currentContestId];
-	}
-
-	pageHeader() {
-		if (this.state.currentContestId) {
-			return this.currentContest().contestName;
-		}
-		return "Naming Contests";
-	}
-
-	currentContent() {
-		if (this.state.currentContestId) {
-			//triple dot means spreading of properties
-			/* eg. contests = contests
-			-> id = id
-			-> Category name = category name
-			-> and so on
-
-
-			*/
-			return <Contest  {...this.currentContest()} />;
-		} else {
-			return (
-				<ContestList
-					contests={this.state.contests}
-					onContestClick={this.fetchContests}
-				/>
-			);
-		}
-	}
-
-	render() {
-		return (
-			<div className="App">
-				<Header message={this.pageHeader()} />
-				{this.currentContent()}
-			</div>
-		);
-	}
+    return <ContestList
+            onContestClick={this.fetchContest}
+            contests={this.state.contests} />;
+  }
+  render() {
+    return (
+      <div className="App">
+        <Header message={this.pageHeader()} />
+        {this.currentContent()}
+      </div>
+    );
+  }
 }
 
 export default App;

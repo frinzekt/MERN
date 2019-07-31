@@ -1,48 +1,42 @@
-import React from "react";
-import ReactDOMServer from "react-dom/server";
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
-import App from "./src/components/App";
+import App from './src/components/App';
 
-//fetch data from the api
-import axios from "axios";
-import config from "./config";
+import config from './config';
+import axios from 'axios';
 
-//FUNCTION
-const getAPIUrl = contestId => {
-	//IF THERE IS AN ID THIS IS THE URL
-	if(contestId){
-		return `${config.serverUrl}/api/contests/${contestId}`;
-	}
-	return `${config.serverUrl}/api/contests`
-}
+const getApiUrl = contestId => {
+  if (contestId) {
+    return `${config.serverUrl}/api/contests/${contestId}`;
+  }
+  return `${config.serverUrl}/api/contests`;
+};
 
-//FUNCTION
-	const getInitialData = (contestId, apiData) => {
-		if(contestId){
-			return{
-				currentContestId:apiData.id,
-				//FAKING AS IF ALL THE CONTESTS IS RETRIEVED
-				//THIS IS BECAUSE THE API ONLY GIVES ONE SET OF DATA
-				contests:{
-					[apiData.id]: apiData
-				}
-			}
-		}
-			return {
-				contests: apiData.contests
-			};
-	}
+const getInitialData = (contestId, apiData) => {
+  if (contestId) {
+    return {
+      currentContestId: apiData.id,
+      contests: {
+        [apiData.id]: apiData
+      }
+    };
+  }
+  return {
+    contests: apiData.contests
+  };
+};
 
 const serverRender = (contestId) =>
-	axios.get(getAPIUrl(contestId)).then(resp => {
-		//This used to be returning only the initialMarkup -> Content
-		const initialData = getInitialData(contestId,resp.data);
-		return {
-			initialMarkup: ReactDOMServer.renderToString(
-				<App initialData={initialData} />
-			),
-			initialData: resp.data
-		};
-	});
+  axios.get(getApiUrl(contestId))
+    .then(resp => {
+      const initialData = getInitialData(contestId, resp.data);
+      return {
+        initialMarkup: ReactDOMServer.renderToString(
+          <App initialData={initialData} />
+        ),
+        initialData
+      };
+    });
 
 export default serverRender;
