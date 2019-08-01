@@ -30,11 +30,53 @@ router.get('/contests', (req, res) => {
     assert.equal(null,err);
 
     if(!contest){ //IF NO MORE CONTEST
-      res.send(contests);
+      res.send({contests});
       return;
     }
 
     contests[contest.id] = contest; //ADDING EACH CONTEST OBJECT TO CONTESTS
+
+  });
+  
+});
+
+router.get('/names', (req, res) => {
+  let names={};
+  mdb.collection('names').find({}) //returns a promise which can be converted using .ToArray or .Each method
+  //takes the field TAKES AN OBJECT of the field to be included
+  
+  .each((err,name) =>{
+    assert.equal(null,err);
+
+    if(!name){ //IF NO MORE CONTEST
+      res.send({names});
+      return;
+    }
+
+    names[name.id] = name; //ADDING EACH CONTEST OBJECT TO CONTESTS
+
+  });
+  
+});
+
+router.get('/names/:nameIds', (req, res) => {
+  //req.params.nameIds -> string with CSV
+  const nameIds = req.params.nameIds.split(',').map(Number); //CONVERSION TO NUMBERS
+
+
+  let names={};
+  mdb.collection('names').find({id: {$in: nameIds}}) //FIND ALL NAMES FOR ALL IDs passed to AAPI
+  //takes the field TAKES AN OBJECT of the field to be included
+  
+  .each((err,name) =>{
+    assert.equal(null,err);
+
+    if(!name){ //IF NO MORE CONTEST
+      res.send({names});
+      return;
+    }
+
+    names[name.id] = name; //ADDING EACH CONTEST OBJECT TO CONTESTS
 
   });
   
