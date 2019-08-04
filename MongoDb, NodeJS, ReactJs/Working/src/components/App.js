@@ -33,10 +33,10 @@ class App extends React.Component {
     );
     api.fetchContest(contestId).then(contest => {
       this.setState({
-        currentContestId: contest.id,
+        currentContestId: contest._id,
         contests: {
           ...this.state.contests,
-          [contest.id]: contest
+          [contest._id]: contest
         }
       });
     });
@@ -76,6 +76,7 @@ class App extends React.Component {
   lookupName = (nameId) => {
     //Loading up page, the name structure will not be in the sate. Hence it will be undefined
     // if condition will prevent accessing an invalid state variable
+    console.log(this.state.names);
     if(!this.state.names || !this.state.names[nameId]){
       return{
         name: '...'
