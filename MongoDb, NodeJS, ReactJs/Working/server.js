@@ -4,7 +4,7 @@ import sassMiddleware from 'node-sass-middleware';
 import path from 'path';
 import serverRender from './serverRender';
 import express from 'express';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
 
 const server = express();
 server.use(bodyParser.json());
@@ -25,8 +25,8 @@ server.get(['/', '/contest/:contestId'], (req, res) => {
       });
     })
     .catch(error=>{
-      console.error(error)
-      res.status(404).send("Bad Request")
+      console.error(error);
+      res.status(404).send('Bad Request');
     });
 });
 
