@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from "react";
 
 class Contest extends Component {
+	state = {
+		error: ""
+	};
+
 	componentDidMount() {
 		this.props.fetchNames(this.props.nameIds);
 	}
@@ -50,12 +54,17 @@ class Contest extends Component {
 									ref="newNameInput"
 									placeholder="New Name Here..."
 									className="form-control"
+									required
 								/>
 								<span className="input-group-btn">
 									<button type="submit" className="btn btn-info">
 										Submit
 									</button>
 								</span>
+
+								{/*formErrors.firstName.length > 0 && (
+									<span className="errorMessage">{formErrors.firstName}</span>
+								)*/}
 							</div>
 						</form>
 					</div>
