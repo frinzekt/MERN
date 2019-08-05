@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from "react";
 
 class Contest extends Component {
 	state = {
-		error: ""
+		formErrors: {
+			newName: ""
+		}
 	};
 
 	componentDidMount() {
@@ -62,9 +64,11 @@ class Contest extends Component {
 									</button>
 								</span>
 
-								{/*formErrors.firstName.length > 0 && (
-									<span className="errorMessage">{formErrors.firstName}</span>
-								)*/}
+								{this.props.formErrors.newName.length > 0 && (
+									<span className="errorMessage">
+										{this.props.formErrors.newName}
+									</span>
+								)}
 							</div>
 						</form>
 					</div>

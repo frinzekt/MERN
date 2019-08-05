@@ -99,13 +99,22 @@ router.post("/names", (req, res) => {
 	//READ data from req.body from parameter
 	//SENDING of new name as a JSON object which needs to be parsed
 	//using body-parser dependency
+
 	console.log(req.body);
+
 	const contestId = ObjectID(req.body.contestId);
 	const name = req.body.newName;
 
 	//VALIDATION ...
 
-	/* To do 3 things:
+	mdb
+		.collection("names")
+		.findOne({ name: req.body.newName })
+		.then(result => {
+			//IF API IS  (NOT FALSE/EMPTY) -> THEN IS VALID FOR INSERT
+
+			if (!result) {
+				/* To do 3 things:
   1. Create the name
   2. Read nameID
   3. Update Contest and APPEND nameID
@@ -117,28 +126,46 @@ router.post("/names", (req, res) => {
   Note: MongoDB has method "findandModify" which finds and modifies + returns the new information
   */
 
-	// FindandModify arguments: [query], [sorting method(for multiple items in returns)], [modification], [new:true] to return update
-	mdb
-		.collection("names")
-		.insertOne({ name })
-		.then(result =>
-			mdb
-				.collection("contests")
-				.findAndModify(
-					{ _id: contestId },
-					[],
-					{
-						$push: { nameIds: result.insertedId }
-					},
-					{ new: true }
-				)
-				.then(doc =>
-					res.send({
-						updatedContest: doc.value,
-						newName: { _id: result.insertedId, name }
+				// FindandModify arguments: [query], [sorting method(for multiple items in returns)], [modification], [new:true] to return update
+				mdb
+					.collection("names")
+					.insertOne({
+						name
 					})
-				)
-		)
+					.then(result =>
+						mdb
+							.collection("contests")
+							.findAndModify(
+								{
+									_id: contestId
+								},
+								[],
+								{
+									$push: {
+										nameIds: result.insertedId
+									}
+								},
+								{
+									new: true
+								}
+							)
+							.then(doc =>
+								res.send({
+									updatedContest: doc.value,
+									newName: {
+										_id: result.insertedId,
+										name
+									}
+								})
+							)
+					)
+					.catch(console.error);
+			} else {
+				res.send({
+					error: "Name Already Exist"
+				});
+			}
+		})
 		.catch(console.error);
 });
 export default router;

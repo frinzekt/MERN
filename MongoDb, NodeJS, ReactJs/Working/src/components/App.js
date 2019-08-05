@@ -14,7 +14,12 @@ class App extends React.Component {
 	static propTypes = {
 		initialData: React.PropTypes.object.isRequired
 	};
-	state = this.props.initialData;
+	state = {
+		...this.props.initialData,
+		formErrors: {
+			newName: ""
+		}
+	};
 	componentDidMount() {
 		onPopState(event => {
 			this.setState({
@@ -82,18 +87,22 @@ class App extends React.Component {
 	addName = (newName, contestId) => {
 		api
 			.addName(newName, contestId)
-			.then(resp =>
-				this.setState({
-					contests: {
-						...this.state.contest,
-						[resp.updatedContest._id]: resp.updatedContest
-					},
-					names: {
-						...this.state.names,
-						[resp.newName._id]: resp.newName
-					}
-				})
-			)
+			.then(resp => {
+				if (!resp.error) {
+					this.setState({
+						contests: {
+							...this.state.contest,
+							[resp.updatedContest._id]: resp.updatedContest
+						},
+						names: {
+							...this.state.names,
+							[resp.newName._id]: resp.newName
+						}
+					});
+				} else {
+					this.setState({ formErrors: { newName: resp.error } });
+				}
+			})
 			.catch(console.error);
 	};
 
@@ -106,6 +115,7 @@ class App extends React.Component {
 					fetchNames={this.fetchNames}
 					lookupName={this.lookupName}
 					addName={this.addName}
+					formErrors={this.state.formErrors}
 					{...this.currentContest()}
 				/>
 			);
