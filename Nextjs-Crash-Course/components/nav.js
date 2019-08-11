@@ -9,26 +9,58 @@ const links = [
 });
 
 const Nav = () => (
-	<nav className="navbar navbar-expand navbar-dark bg-dark mb-4">
-		<div className="container">
-			<a className="navbar-brand" href="#">
-				BitzPrice
-			</a>
-			<div className="collapse navbar-collapse">
-				<ul className="navbar-nav ml-auto">
-					<li className="nav-item">
-						<Link href="/">
-							<a className="nav-link">Home</a>
+	<nav>
+		<ul>
+			<li>
+				<Link prefetch href="/">
+					<a>Home</a>
+				</Link>
+			</li>
+			<li>
+				<Link prefetch href="/about">
+					<a>About</a>
+				</Link>
+			</li>
+			<ul>
+				{links.map(({ key, href, label }) => (
+					<li key={key}>
+						<Link href={href}>
+							<a>{label}</a>
 						</Link>
 					</li>
-					<li className="nav-item">
-						<Link href="/about">
-							<a className="nav-link">About</a>
-						</Link>
-					</li>
-				</ul>
-			</div>
-		</div>
+				))}
+			</ul>
+		</ul>
+
+		<style jsx>{`
+			:global(body) {
+				margin: 0;
+				font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
+					Helvetica, sans-serif;
+			}
+			nav {
+				text-align: center;
+			}
+			ul {
+				display: flex;
+				justify-content: space-between;
+				background: #333;
+				color: #fff;
+				list-style: none;
+			}
+			nav > ul {
+				padding: 4px 16px;
+			}
+			li {
+				font-size: 18px;
+				margin-right: 20px;
+			}
+			a {
+				color: #fff;
+				text-decoration: none;
+				font-size: 13px;
+			}
+		`}</style>
 	</nav>
 );
 
