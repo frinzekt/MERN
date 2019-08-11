@@ -1,13 +1,13 @@
-import React from "react";
-import Link from "next/link";
+import Fetch from "isomorphic-unfetch";
 
 import Layout from "../components/layout";
+import Prices from "../components/prices";
 
-const Home = () => (
+const Home = props => (
 	<div className="Home">
 		<Layout>
 			<h1 className="title">Welcome to BitzPrice</h1>
-
+			<Prices bpi={props.bpi} />
 			<style jsx>{`
 				.hero {
 					width: 100%;
@@ -57,5 +57,13 @@ const Home = () => (
 		</Layout>
 	</div>
 );
+
+Home.getInitialProps = async function() {
+	const res = await fetch("https://api.coindesk.com/v1/bpi/currentprice.json");
+	const data = await res.json();
+	return {
+		bpi: data
+	};
+};
 
 export default Home;
