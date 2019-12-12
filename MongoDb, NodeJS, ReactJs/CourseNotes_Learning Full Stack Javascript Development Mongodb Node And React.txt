@@ -1,0 +1,525 @@
+Course Title: Learning Full-Stack JavaScript Development: MongoDB, Node, and React
+
+Description: Learn by doing! Learn full-stack JavaScript development by building a web application with MongoDB, Node.js, and React.js.    Learn how to use Node as a web server and an API server, how to consume data and build user interfaces with React, and how to read and write data with a MongoDB database. React allows you to build full-featured, data-driven applications faster and more efficiently than what is possible with JavaScript alone.    Samer Buna introduces modern JavaScript programming concepts, with an emphasis on functional methods and open-source tools. The lessons are almost completely hands-on, with live coding demonstrations that bring the concepts home.
+
+
+***********************************************
+Chapter: 1. Getting Started
+***********************************************
+
+
+-----------------------------------------------
+Video: Modern JavaScript
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:55            Function scope - the scope at which the function is defined
+Block scopes - the scope at which a specific code is defined and restricted
+eg. If statements, loops 
+
+0:02:54            let vs var
+let - allows initialization only in the block scope
+Note: const is like let, but const is for a constant reference
+
+Note2: For constant object, you could change the values inside the object but cannot change the reference of the object itseslf
+
+var - defined either function scope or block scope depending on which it is defined 
+
+0:03:11            "function" can be omitted with the use of "=>" (arrow function an ECMAscript syntax)
+
+Note: Arrow functions can ommit parenthesis if there is only one argument
+
+Note2: For 0 arguments, () has to be left
+
+Note3: The braces can be omitted for one liners
+
+eg. const square = a => a*a; 
+
+0:03:27            Function as a property of an object
+
+eg. let util{
+    square(a){
+           return a*a;
+   }
+} 
+
+0:04:15            Arrow functions are lexically scoped -> "this" keyword  refers to parent scope while for regular function, "this" keyword refers to the caller.
+
+eg. 
+exports.i = 'am exports';
+console.log(this);
+
+let util ={
+   f1: function(){
+  console.log(this);
+}
+}
+
+util.f1(); // {f1: [Function: f1], f2: [Function: f2]}
+util.f2(); //{i: 'am exports'} 
+
+0:04:39            When the properties and the values are the same, the values could be omitted when in an object.
+
+eg.
+const X = {
+PI:PI,
+sum:sum,
+square:square,
+}
+
+is the same as ...
+const X = {
+PI,
+sum,
+square,
+} 
+
+0:04:53            Destructuring syntax:
+const square = X.square;
+
+Is the same thing as ...
+const { square } = X;
+
+For more complexity:
+
+const {PI,sum,square} = X;
+
+Note: this also applies to function importing
+eg. const {Component} = require('react');
+
+is the same as ...
+const Component = require('react').Component 
+
+0:05:39            Destructuring works with function parameters too:
+eg. const ToDecimal = (parameters) => {...}
+
+can be expressed as...
+const ToDecimal = ({base,number}) => {...}
+
+Note: Default values can be added and is applied when no value is called upon.
+eg. const ToDecimal = ({base =2 ,number}) => {...}
+
+if no value is specified for base, it equates to 2 
+
+0:06:14            rest parameters - parameters that becomes an array to hold the rest/remaining unspecified parameters.
+ and uses the syntax "...[param-name]" (using spread operator ... )
+
+eg. const ToDecimal = ({base,...number}) => {...}
+
+Note: The spread operator can also be used for other things aside from parameters.
+
+eg. console.log([0, ...numbers]) // [0,101,111,1010] 
+
+
+-----------------------------------------------
+Video: Setting up project dependencies
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:42            3 Node System:
+- Node Web Server
+- Render initial React Components from Front end to back-end
+- Node API Server - communication of front-end to back-end 
+
+0:02:55            Two types of dependencies:
+- main dependencies - code that will be used in production
+- local dev dependencies - can only be used during development 
+
+0:06:28            main dependency library:
+- express
+-> backend connector
+- mongodb
+-> handles database
+- react
+-> describe user interface
+- react-dom
+-> rendering of interfaces
+
+dev dependency library (-D) :
+- webpack
+- webpack-cli
+-> translator of modular code to HTML and bundles it
+- babel-loader
+- @babel/cli
+- @babel/core
+- @babel/preset-env
+- @babel/preset-react
+- @babel/plugin-proposal-class-properties
+-> transforms JFX code to what React understands
+-> Also transforms modern javascript feature to old and unsupported browser
+- nodemon
+-> package monitors files and autorestarts node
+- eslint
+- babel-eslint
+- eslint-plugin-react
+-> helps error lookout
+- propTypes 
+
+
+-----------------------------------------------
+Video: Project structure and configurations
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:01:12            Convention of working:
+- src (source)
+-> contains the source code for all the front-end files
+
+- public
+-> host static asset such as html js, css that will load in the client
+
+- api
+-> files for the backend
+
+Note: "index" name is used to reference the starting point of every directory 
+
+0:02:51            scripts:
+"start" : "nodemon --exec babel-node server.js --ignore public/"
+-> initial starting to nodemon (see previous use)
+-> babel (see previous use) -> execution of babel with node server (using babel-node server.js instead of node server.js)
+-> Ignoring public file as that is driven by changes in src
+Note: server.js is the file used for containing server code
+
+"dev": "webpack -wd"
+-> watch mode and development mode for webpack 
+
+0:03:49            preset files:
+webpack.config.js
+babel.config.js
+.eslintrc.js 
+
+
+***********************************************
+Chapter: 2. Node as a Web Server
+***********************************************
+
+
+-----------------------------------------------
+Video: The HTTP/HTTPS modules
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:22            HTTP module can be used for both client and  serrver 
+
+
+-----------------------------------------------
+Video: Creating an Express server
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:02:45            server.get("/about.html", (req, res) => {
+	//res.send("This is about page");
+	fs.readFile("./about.html", (err, data) => {
+		//Reads the data of the file and turns it into a string for sending
+		res.send(data.toString());
+	});
+});
+
+Note: using fs.readfile requires import of fs from "fs" 
+
+0:03:18            //Express has a static middleware which serves static files easily
+server.use(express.static('public'));
+
+Note: about.html file has to be saved in public 
+
+0:03:47            Static assets should be managed separately from the node server as there are much more faster options like NGINX. 
+
+0:04:12            Express can manage group of routes with their own modules instead of having everything in server.js (see index.js in API folder) 
+
+0:05:06            Express Servers can be used to send JSON files through the network through API calls using response.send([JSON File]) 
+
+
+-----------------------------------------------
+Video: Using the EJS template language
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:34            EJS (Embedded JavaScript) can be used to create a dynamic template.
+
+Note: That there are a lot of different options for this 
+
+0:00:39            Setting up EJS with express:
+Code: server.settings("view engine", "ejs");
+
+Note: EJS is a dependency->
+npm i -s ejs 
+
+0:00:53            Express will look for the EJS template under the views folder on root directory of it 
+
+0:01:07            EJS are like html but Javascript can be embedded.
+
+eg.
+<% Math.random() % > 
+
+0:01:18            server.settings("view engine", "ejs");
+
+server.get("/", (req, res) => {
+	//To render EJS component omitting the extension as default
+	res.render('index');
+
+});
+
+To pass variable:
+//Render has two arguments, path and variable passing
+	res.render("index", {
+		content: "Hello This is Variable passing of <em>var content</em>"
+	}); 
+
+0:02:21            Common template formats are the following:
+<%=%> - escaped template which does not render html in the string
+
+<%-%> - will render html in the string 
+
+0:02:50            Multiple EJS files can be divided in order for rendering to only happen once for every section of the file.
+
+Hence division of html tags in multiple file that is compile by the express server for serving 
+
+
+***********************************************
+Chapter: 3. React Basics
+***********************************************
+
+
+-----------------------------------------------
+Video: React elements and JSX
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:04:16            React.createElement([element],[attributes/props],[children])
+
+is a function that will return the object containing all the html element that was created 
+
+0:06:33            In ecmascript, when the assignment is the same as the variable ... it can be written once
+
+eg. color : color
+Replace to -> color
+
+This is especially applicable to json assignments. 
+
+0:06:56            in JSX className is used over class to differentiate the class from OOP 
+
+
+-----------------------------------------------
+Video: React components
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:18            App component is usually the top-level component at which receives the edit. The index.js is the file that calls the app component 
+
+
+-----------------------------------------------
+Video: Component composability
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:24            JSX return has to be contained in one parent element such as a div.
+
+This is because a return element of a JSX arrow function uses a react.create element call which means it can only render one huge element rather than multiple pieces 
+
+
+-----------------------------------------------
+Video: Component state
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:04:12            The states of the component can be seen in console and corresponding to app as $r
+
+When change has been done using setState... React will react to the changes 
+
+
+-----------------------------------------------
+Video: Component life cycle
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:11            Lifecycle of a Component
+Components all have a life-cycle of use and reuse.
+
+Mounting -> Updating -> Removing 
+
+0:03:11            componentDidMount() is usually used to fetch data, load third-party API, set timers and listeners
+
+while ComponentwillUnMount() will clean those presets 
+
+0:03:11            ComponentsDidMount() is a function that runs whenever the component is being rendered
+
+ComponentWillUnmount() will run whenever the component will be removed from the DOM 
+
+
+***********************************************
+Chapter: 4. Working with Data
+***********************************************
+
+
+-----------------------------------------------
+Video: Using Sass with Node
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:26            Using the webpack loader, it converts ejs to html. It also does the same for scss to css 
+
+
+-----------------------------------------------
+Video: Reading from the state
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:00            this.setState(prevState => ({
+pageHeader: prevState.pageHeader + "Nice One",
+contests: data.contests
+})); 
+
+0:00:30            React needs a key to identify the elemtn when an array of a children changes 
+
+
+-----------------------------------------------
+Video: Fetching data from a remote API
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:05            //Fetch Request
+		/* This method has been learned in React-Essential Training
+		fetch("http://localhost:8080/api/contests")
+			.then(data => data.json())
+			.then(data => this.setState({ contests: data.contests }));
+		*/
+		//Axios Request/ Ajax Request uses axios library
+		axios
+			.get("/api/contests")
+			.then(resp => {
+				this.setState({
+					contests: resp.data.contests
+				});
+			})
+			.catch(console.error); 
+
+
+***********************************************
+Chapter: 5. Rendering on the Server
+***********************************************
+
+
+-----------------------------------------------
+Video: Fetching data from the server side
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:27            When javascript is disabled ... the application will not work ... Hence the advantage of server-side rendering
+
+Note: The search engine uses data from the website that does not have an active javascript. 
+
+0:01:09            In a real-world scenario, there would be two servers. The API server and the web server.
+
+The API server sends data. The web server receives data from the API server which can be used to prerender react 
+
+
+-----------------------------------------------
+Video: Server rendering with ReactDOMServer
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:03:13            A promise is an object that may produce a single value some time in the future: either a resolved value, or a reason that it’s not resolved (e.g., a network error occurred). A promise may be in one of 3 possible states: fulfilled, rejected, or pending. Promise users can attach callbacks to handle the fulfilled value or the reason for rejection. 
+
+0:05:20            Problem with this method:
+If javascript is enabled:
+-> server-side rendering (web server calls API to load default data or so_
+
+-> The default entry in the DOM is emptied (because javascript is running)
+
+-> Fetch/Axiom call to the api to load data
+
+Note: All-in-all this is inefficient (AKA Checksum Problem) 
+
+
+-----------------------------------------------
+Video: Fix the checksum problem
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:00            Solution #1:
+-> Remove the initialization of [] (empty object)
+-> Do not use this.setState, but rather initialize the rendering using an API call before the item is rendered
+
+Note: the previous problem uses API calling in the componentDidMount() which means the rendering takes place then is rerendered when there is new data
+
+Solution #2:
+-> Save the initialMarkup and initialData to the EJS file holding the views
+-> initialMarkup rendered and initialData as a window/global variable 
+
+0:01:29            ReactDom.render(
+			//The concept of the change is that for the checksum problem not to occur
+			//The data has to be in the rendering side to begin with
+			<App initialContests={resp.data.contests} />,
+			document.getElementById("root")
+		); 
+
+
+***********************************************
+Chapter: 6. Routing on Client and Server
+***********************************************
+
+
+-----------------------------------------------
+Video: Handling the contest click event
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:51            Class components are good for handling dynamic functions (functions that handles incoming data multiple times if need be) 
+
+
+-----------------------------------------------
+Video: Handling the browser's back button
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:06:29            Pushstate and Popstate are functions that tries to run the API being forwarded to the function as an argument which is used for history tracker of state.
+
+pushstate - forward event
+popstate - backward event
+
+Note: popstate creates an error if the element is unmounted and the API data is trying to load to the unmounted element 
+
+
+***********************************************
+Chapter: 7. Working with MongoDB
+***********************************************
+
+
+-----------------------------------------------
+Video: Example script to update all data
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:01:11            ObjectIds can be generated in client-side and supply.
+
+If ObjectId isn't supplied, it is automatically created by MongoDB 
+
+
+-----------------------------------------------
+Video: Alternatives: MERN and Electrode
+-----------------------------------------------
+Note Time:         Note Text:                     
+
+0:00:50            MERN - template for the MERN Stack
+Electrode - template for Node and React 
+
+0:01:00            MERN setup:
+1. npm install -g mern-cli
+2. mern init [name of App]
+3. cd [name of App]
+4. npm install
+5. npm start 
+
+0:01:57            MERN stack boilerplate includes a lot of dependencies, but the most useful are:
+- mongoose
+- react-redux
+- react-router 
+
+0:05:20            Electrode:
+1. npm install -g yo gulp generator-electode
+2. mkdir [name of App]
+3. cd [name of App]
+4. yo electrode
+5. gulp dev 
+
+[object Object]

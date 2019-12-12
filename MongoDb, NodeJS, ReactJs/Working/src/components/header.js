@@ -1,23 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-
-const color = Math.random() > 0.5 ? "green" : "red";
+import React from 'react';
 
 const Header = ({ message }) => {
-	return (
-		<h2 className="text-center Header" style={{ color }}>
-			{message}
-		</h2>
-	);
+  return (
+    <h2 className="Header text-center">
+      {message}
+    </h2>
+  );
 };
 
 Header.propTypes = {
-	//string refers to limitation of type via string, isRequired refers to limitation of non-null value
-	message: PropTypes.string.isRequired
-};
-
-Header.defaultProps = {
-	message: "Hello"
+  message: React.PropTypes.string
 };
 
 export default Header;

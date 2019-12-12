@@ -1,11 +1,7 @@
-<script type="text/javascript">
-//Global Variable
-//Json.stringify converts JSON object to String notation
-    window.initialData = <%- JSON.stringify(initialData) -%>
-</script>
-
 <%- include('header') -%>
-    <div id="root">
-        <%- initialMarkup -%>
-    </div>
+  <div id="root"><%- initialMarkup -%></div>
+
+  <script type="text/javascript">
+    window.initialData = <%- JSON.stringify(initialData) -%>;
+  </script>
 <%- include('footer') -%>
